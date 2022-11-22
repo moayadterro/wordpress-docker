@@ -1,0 +1,46 @@
+version: "3"
+services: 
+  db: 
+    container_name: mysql_db
+    environment: 
+      MYSQL_DATABASE: cm37703_wr
+      MYSQL_PASSWORD: w7Mq3tKs
+      MYSQL_ROOT_PASSWORD: Qwerty_123
+      MYSQL_USER: cm37703_wr
+    image: "mysql:5.7"
+    restart: always
+    volumes: 
+      - "./mysql:/var/lib/mysql"
+
+  wordpress: 
+    container_name: wp_container
+    depends_on: 
+      - db
+    environment: 
+      WORDPRESS_DB_HOST: "db:3306"
+      WORDPRESS_DB_NAME: cm37703_wr
+      WORDPRESS_DB_PASSWORD: w7Mq3tKs
+      WORDPRESS_DB_USER: cm37703_wr
+    image: "wordpress:6.1.1"
+    ports: 
+      - "8000:80"
+    restart: always
+    volumes: 
+      - "./public_html:/var/www/html"
+
+  phpmyadmin: 
+    container_name: phpmyadmin
+    depends_on: 
+      - db
+    environment: 
+      MYSQL_ROOT_PASSWORD: Qwerty_123
+      PMA_HOST: mysql_db
+      UPLOAD_LIMIT: 300M
+    image: phpmyadmin
+    ports: 
+      - "8080:80"
+    restart: always
+
+volumes: 
+  mysql: 
+  public_html:
